@@ -1,3 +1,6 @@
+using coin_api01.Data;
+using coin_api01.Services;
+using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 
@@ -17,6 +20,7 @@ namespace coin_api01
 
                 // Add services to the container.
                 builder.Services.AddHttpClient();
+                builder.Services.AddSingleton<ICoinService,CoinDeskService>();
 
                 builder.Services.AddControllers();
 
