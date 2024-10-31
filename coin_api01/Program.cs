@@ -3,6 +3,7 @@ using coin_api01.Services;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using Newtonsoft.Json.Serialization;
 
 namespace coin_api01
 {
@@ -26,6 +27,11 @@ namespace coin_api01
 
                 builder.Services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+                builder.Services.AddControllers().AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                });
 
                 // NLog: Setup NLog for Dependency injection
                 builder.Logging.ClearProviders();
