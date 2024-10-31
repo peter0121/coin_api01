@@ -24,7 +24,8 @@ namespace coin_api01
                 builder.Services.AddHttpClient();
                 builder.Services.AddSingleton<ICoinService,CoinDeskService>();
 
-                builder.Services.AddControllers();
+                builder.Services.AddDbContext<AppDbContext>(options =>
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
                 // NLog: Setup NLog for Dependency injection
                 builder.Logging.ClearProviders();
