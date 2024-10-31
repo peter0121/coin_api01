@@ -19,6 +19,8 @@ namespace coin_api01
                 var builder = WebApplication.CreateBuilder(args);
 
                 // Add services to the container.
+                builder.Services.Configure<CoinApiOptions>(builder.Configuration);
+
                 builder.Services.AddHttpClient();
                 builder.Services.AddSingleton<ICoinService,CoinDeskService>();
 
