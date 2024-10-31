@@ -2,7 +2,9 @@ using coin_api01.Data;
 using coin_api01.Models;
 using coin_api01.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 namespace coin_api01.Controllers
@@ -73,6 +75,90 @@ namespace coin_api01.Controllers
             }
 
             return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        //Add CoinLang
+        [HttpPost]
+        public IActionResult AddLang([FromBody] CoinLangModel coin)
+        {
+            if (String.IsNullOrEmpty(coin.Code) || String.IsNullOrEmpty(coin.Name))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+
+            try
+            {
+                var get_lang = _appDbContext.CoinLang.Where(x => x.Code == coin.Code).FirstOrDefault();
+                if (get_lang != null)
+                {
+                    //¸ê®Æ­«½Æ
+                    return BadRequest("");
+                }
+
+                _appDbContext.CoinLang.Add(coin);
+                _appDbContext.SaveChanges();
+                _logger.LogInformation($"AddLang success,{coin.Code},{coin.Name}");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"AddLang fail,{coin.Code},{coin.Name},{ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("{code}")]
+        public IActionResult UpdateLang(string code, [FromBody] CoinLangModel input)
+        {
+            if (String.IsNullOrEmpty(code) || input == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+
+            try
+            {
+                var get_lang = _appDbContext.CoinLang.FirstOrDefault(x => x.Code == code);
+                if (get_lang != null)
+                {
+                    string old_name = get_lang.Name;
+                    get_lang.Name = input.Name;
+                    _appDbContext.SaveChanges();
+                    _logger.LogInformation($"UpdateLang success, {code},{old_name},{input.Name}");
+                    return Ok();
+                }
+
+                return BadRequest("");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"UpdateLang fail,{code},{ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }            
+        }
+
+        [HttpDelete("{code}")]
+        public IActionResult DeleteLang(string code)
+        {
+            if (String.IsNullOrEmpty(code))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            try
+            {
+                var get_lang = _appDbContext.CoinLang.FirstOrDefault(x => x.Code == code);
+                if (get_lang != null)
+                {
+                    _appDbContext.CoinLang.Remove(get_lang);
+                    _appDbContext.SaveChanges();
+                    return Ok();
+                }
+                return BadRequest("");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DeleteLang fail,{code},{ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }            
         }
     }
 }
