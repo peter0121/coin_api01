@@ -2,3 +2,5 @@
 /coin_api01/obj
 /coin_api01/bin
 /coin_api01/appsettings.Development.json
+/coin_api01.Test/obj
+/coin_api01.Test/bin
