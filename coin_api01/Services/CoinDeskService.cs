@@ -1,4 +1,5 @@
-﻿using coin_api01.Models;
+﻿using Azure;
+using coin_api01.Models;
 using System;
 using System.Text;
 using System.Text.Json;
@@ -31,7 +32,7 @@ namespace coin_api01.Services
             return result;
         }
 
-        private string CallGetApi(string url)
+        private string? CallGetApi(string url)
         {
             var client = _httpClientFactory.CreateClient();
             //HttpClient client = new HttpClient();
@@ -39,7 +40,12 @@ namespace coin_api01.Services
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, url);
 
             var result = client.SendAsync(msg).Result;
-            var responseStr = result.Content.ReadAsStringAsync().Result;
+            string? responseStr = null;
+
+            if (result.IsSuccessStatusCode)
+            {
+                responseStr = result.Content.ReadAsStringAsync().Result;
+            }
 
             return responseStr;
         }
