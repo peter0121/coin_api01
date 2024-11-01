@@ -40,7 +40,7 @@ namespace coin_api01.Controllers
 
                 if (get_online == null)
                 {
-                    return StatusCode(StatusCodes.Status503ServiceUnavailable);
+                    return StatusCode(StatusCodes.Status503ServiceUnavailable , "");
                 }
 
 
@@ -71,10 +71,10 @@ namespace coin_api01.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Get price fail, {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "");
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status500InternalServerError, "");
         }
 
         //Add CoinLang
@@ -83,7 +83,7 @@ namespace coin_api01.Controllers
         {
             if (String.IsNullOrEmpty(coin.Code) || String.IsNullOrEmpty(coin.Name))
             {
-                return StatusCode(StatusCodes.Status400BadRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, "");
             }
 
             try
@@ -92,7 +92,7 @@ namespace coin_api01.Controllers
                 if (get_lang != null)
                 {
                     //¸ê®Æ­«½Æ
-                    return BadRequest("");
+                    return StatusCode(StatusCodes.Status400BadRequest, "");
                 }
 
                 _appDbContext.CoinLang.Add(coin);
@@ -103,7 +103,7 @@ namespace coin_api01.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"AddLang fail,{coin.Code},{coin.Name},{ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "");
             }
         }
 
@@ -112,7 +112,7 @@ namespace coin_api01.Controllers
         {
             if (String.IsNullOrEmpty(code) || input == null)
             {
-                return StatusCode(StatusCodes.Status400BadRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, "");
             }
 
             try
@@ -127,12 +127,12 @@ namespace coin_api01.Controllers
                     return Ok();
                 }
 
-                return BadRequest("");
+                return StatusCode(StatusCodes.Status400BadRequest, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"UpdateLang fail,{code},{ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "");
             }            
         }
 
@@ -141,7 +141,7 @@ namespace coin_api01.Controllers
         {
             if (String.IsNullOrEmpty(code))
             {
-                return StatusCode(StatusCodes.Status400BadRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, "");
             }
             try
             {
@@ -152,12 +152,12 @@ namespace coin_api01.Controllers
                     _appDbContext.SaveChanges();
                     return Ok();
                 }
-                return BadRequest("");
+                return StatusCode(StatusCodes.Status400BadRequest, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"DeleteLang fail,{code},{ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "");
             }            
         }
     }
