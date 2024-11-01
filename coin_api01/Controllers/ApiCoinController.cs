@@ -81,6 +81,15 @@ namespace coin_api01.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, "");
         }
 
+        [HttpGet]
+        [Route("support")]
+        public IActionResult GetSupport()
+        {
+            CoinSupportModel result = new CoinSupportModel();
+            result.Codes = GetSupportCode();
+            return Ok(result);
+        }
+
         //Add CoinLang
         [HttpPost]
         public IActionResult AddLang([FromBody] CoinLangModel coin)
