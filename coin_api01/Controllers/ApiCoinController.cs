@@ -41,7 +41,7 @@ namespace coin_api01.Controllers
 
                 if (get_online == null)
                 {
-                    return StatusCode(StatusCodes.Status503ServiceUnavailable , "");
+                    return StatusCode(StatusCodes.Status503ServiceUnavailable, "");
                 }
 
 
@@ -63,9 +63,12 @@ namespace coin_api01.Controllers
                                 Name = col.Name,
                                 Rate = tmp.rate_float
                             }
-                         );
+                        );
                     }
                 }
+
+                //排序
+                result.data = result.data.OrderBy(x => x.Code).ToList();
 
                 return Ok(result);
             }
@@ -88,7 +91,7 @@ namespace coin_api01.Controllers
             }
 
             var get_support_list = GetSupportCode();
-            if(!get_support_list.Contains(coin.Code))
+            if (!get_support_list.Contains(coin.Code))
             {
                 //Code不再支援內
                 return StatusCode(StatusCodes.Status400BadRequest, "");
@@ -141,7 +144,7 @@ namespace coin_api01.Controllers
             {
                 _logger.LogError($"UpdateLang fail,{code},{ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "");
-            }            
+            }
         }
 
         [HttpDelete("{code}")]
@@ -166,7 +169,7 @@ namespace coin_api01.Controllers
             {
                 _logger.LogError($"DeleteLang fail,{code},{ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "");
-            }            
+            }
         }
 
         private List<string> GetSupportCode()
