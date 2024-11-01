@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 
 namespace coin_api01.Controllers
 {
@@ -86,6 +87,13 @@ namespace coin_api01.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, "");
             }
 
+            var get_support_list = GetSupportCode();
+            if(!get_support_list.Contains(coin.Code))
+            {
+                //Code不再支援內
+                return StatusCode(StatusCodes.Status400BadRequest, "");
+            }
+
             try
             {
                 var get_lang = _appDbContext.CoinLang.Where(x => x.Code == coin.Code).FirstOrDefault();
@@ -159,6 +167,18 @@ namespace coin_api01.Controllers
                 _logger.LogError($"DeleteLang fail,{code},{ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "");
             }            
+        }
+
+        private List<string> GetSupportCode()
+        {
+            var list = new List<string>()
+            {
+                "USD",
+                "GBP",
+                "EUR"
+            };
+
+            return list;
         }
     }
 }
