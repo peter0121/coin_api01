@@ -1,7 +1,12 @@
 ## 實作內容
+* 幣別 DB 維護功能。
+* 呼叫 coindesk 的 API。
+* 呼叫 coindesk 的 API，並進行資料轉換，組成新 API。
+* 所有功能均須包含單元測試。
 
 ## 實作加分題
-
+* Error handling 處理 API response
+* 能夠運行在 Docker
 
 ## docker image 生成
 ```
